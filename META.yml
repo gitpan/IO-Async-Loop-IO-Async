@@ -16,11 +16,11 @@ name: IO-Async-Loop-IO-Async
 provides:
   IO::Async::Loop::IO::Async:
     file: lib/IO/Async/Loop/IO/Async.pm
-    version: 0.01
+    version: 0.02
 requires:
   IO::Async: 0.24
   IO::Async::PID: 0.32
   IO::Async::Timer::Absolute: 0
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.01
+version: 0.02

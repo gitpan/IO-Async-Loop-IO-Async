@@ -8,14 +8,13 @@ package IO::Async::Loop::IO::Async;
 use strict;
 use warnings;
 
-our $VERSION = '0.01';
-use constant API_VERSION => '0.24';
+our $VERSION = '0.02';
+use constant API_VERSION => '0.33';
 
 use base qw( IO::Async::Loop );
 
 use Carp;
 
-use Time::HiRes qw( time );
 use Scalar::Util qw( weaken );
 
 use IO::Async::Notifier;
@@ -283,6 +282,12 @@ sub watch_child
    my $self = shift;
    my ( $pid, $code ) = @_;
 
+   # Some more cheating
+   if( $pid == 0 ) {
+      $self->parent_loop->watch_child( 0, $code );
+      return;
+   }
+
    weaken( my $weakself = $self );
 
    my $ioa_pid = IO::Async::PID->new(
@@ -305,6 +310,10 @@ sub unwatch_child
 {
    my $self = shift;
    my ( $pid ) = @_;
+
+   if( $pid == 0 ) {
+      $self->parent_loop->unwatch_child( 0 );
+   }
 
    $self->{root_notifier}->remove_child( delete $self->{pids}{$pid} );
 }
